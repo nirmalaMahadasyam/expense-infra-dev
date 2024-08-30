@@ -145,6 +145,7 @@ resource "aws_security_group_rule" "frontend_public" {
   security_group_id = module.frontend.sg_id # whcih security group we connected(frontend)
 }
 
+
 ###############################################################################
 
 # frontend accepted to conncted from bastion
@@ -169,4 +170,16 @@ resource "aws_security_group_rule" "bastion_public" {
   cidr_blocks = ["0.0.0.0/0"]
   security_group_id = module.bastion.sg_id
 }
+
+##################################################
+# 06-app_alb: app_alb_vpn app_alb accepting to conncted from vpn
+resource "aws_security_group_rule" "app_alb_vpn" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  source_security_group_id = module.vpn.sg_id # source is where you getting traffic(vpn)
+  security_group_id = module.app_alb.sg_id
+}
+
 
